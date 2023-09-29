@@ -365,6 +365,15 @@ public class OutputFrameController {
             return;
         }
 
+
         this.selectedCoordinates(i, j);
+        this.bot.setBoardState(buttons);
+        for (int k = 0; k < ROW; k++) {
+            for (int l = 0; l < COL; l++) {
+                System.out.print(this.bot.boardState[k][l]);
+            }
+            System.out.println("");
+        }
+        System.out.println("XXXXXXXXXXX");
     }
 }
