@@ -1,5 +1,6 @@
 import bot.Bot;
 import bot.impl.DefaultBot;
+import bot.impl.LocalSearchBot;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -79,7 +80,7 @@ public class OutputFrameController {
         this.isBotFirst = isBotFirst;
 
         // Start bot
-        this.bot = new DefaultBot();
+        this.bot = new LocalSearchBot();
         this.playerXTurn = !isBotFirst;
         if (this.isBotFirst) {
             this.moveBot();
@@ -355,6 +356,15 @@ public class OutputFrameController {
     }
 
     private void moveBot() {
+        this.bot.setBoardState(buttons);
+        for (int k = 0; k < ROW; k++) {
+            for (int l = 0; l < COL; l++) {
+                System.out.print(this.bot.boardState[k][l]);
+            }
+            System.out.println("");
+        }
+        System.out.println("XXXXXXXXXXX");
+
         int[] botMove = this.bot.move();
         int i = botMove[0];
         int j = botMove[1];
@@ -367,13 +377,13 @@ public class OutputFrameController {
 
 
         this.selectedCoordinates(i, j);
-        this.bot.setBoardState(buttons);
-        for (int k = 0; k < ROW; k++) {
-            for (int l = 0; l < COL; l++) {
-                System.out.print(this.bot.boardState[k][l]);
-            }
-            System.out.println("");
-        }
-        System.out.println("XXXXXXXXXXX");
+//        this.bot.setBoardState(buttons);
+//        for (int k = 0; k < ROW; k++) {
+//            for (int l = 0; l < COL; l++) {
+//                System.out.print(this.bot.boardState[k][l]);
+//            }
+//            System.out.println("");
+//        }
+//        System.out.println("XXXXXXXXXXX");
     }
 }
