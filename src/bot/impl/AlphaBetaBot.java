@@ -4,26 +4,40 @@ import bot.Bot;
 import javafx.scene.control.Button;
 import javafx.util.Pair;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class AlphaBetaBot implements Bot {
     public int[] move() {
-        Integer[] nextMove = minmax(true, 3, new Pair<Integer[], Integer[][]>(new Integer[]{0,0}, boardState), -10000, 10000).getKey();
+        long startTime = System.nanoTime();
+        Integer[] nextMove = minmax(true, 4, new Pair<Integer[], Integer[][]>(new Integer[]{0,0}, boardState), -10000, 10000).getKey();
         System.out.println("Next move is:" + nextMove[0] + nextMove[1]);
+        long endTime = System.nanoTime();
+        long elapsedTime = (endTime - startTime) / 1_000_000; // Convert nanoseconds to milliseconds
+        System.out.println("Execution time: " + elapsedTime + " ms");
         return new int[]{nextMove[0], nextMove[1]};
     }
 
     public Pair<Integer[], Integer[][]> minmax(boolean isMax, Integer depth, Pair<Integer[], Integer[][]> state, Integer a, Integer b) {
         List<Pair<Integer[], Integer[][]>> neighbors = createSuccessor(isMax, getEmptyBlock(state.getValue()), state.getValue());
+//        Comparator<Pair<Integer[], Integer[][]>> pairComparator = new Comparator<Pair<Integer[], Integer[][]>>() {
+//            @Override
+//            public int compare(Pair<Integer[], Integer[][]> pair1, Pair<Integer[], Integer[][]> pair2) {
+//                if(isMax){
+//                    return Integer.compare(getBoardScore(pair2.getValue()), getBoardScore(pair1.getValue()));
+//                } else {
+//                    return Integer.compare(getBoardScore(pair1.getValue()), getBoardScore(pair2.getValue()));
+//                }
+//            }
+//        };
+//        Collections.sort(neighbors, pairComparator);
+        if(depth == 0 || neighbors.size() == 0){ return state; }
         Pair<Integer[], Integer[][]> chosenState = neighbors.get(0);
-        if(depth == 0){ return state; }
         if(isMax){
             for (Pair<Integer[], Integer[][]> neighbor : neighbors) {
                 Integer neighborValue = getBoardScore(minmax(false, depth - 1, neighbor, a, b).getValue());
                 if(a < neighborValue) { a = neighborValue; chosenState = neighbor;}
-                if(a > b) {System.out.println("prune alpha : "+ a + " beta : " + b); return chosenState; }
+                System.out.println(depth);
+                if(a >= b) {System.out.println("prune alpha : "+ a + " beta : " + b + " depth :" + depth); return chosenState; }
             }
 
             return chosenState;
@@ -31,7 +45,8 @@ public class AlphaBetaBot implements Bot {
             for (Pair<Integer[], Integer[][]> neighbor : neighbors) {
                 Integer neighborValue = getBoardScore(minmax(true, depth - 1, neighbor, a, b).getValue());
                 if(b > neighborValue) { b = neighborValue; chosenState = neighbor;}
-                if(a > b) {System.out.println("prune alpha : "+ a + " beta : " + b); return chosenState; }
+                System.out.println(depth);
+                if(a >= b) {System.out.println("prune alpha : "+ a + " beta : " + b + " depth :" + depth); return chosenState; }
             }
 
             return chosenState;
