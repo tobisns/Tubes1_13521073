@@ -47,28 +47,8 @@ public class LocalSearchBot implements Bot {
     public Integer[] hillclimbing() {
         List<Integer[]> emptyBlock = new ArrayList<>(getEmptyBlock());
         List<Pair<Integer[], Integer[][]>> successorList = new ArrayList<>(createSuccessor(emptyBlock));
-        Integer[][] nextBoard = boardState;
-        Integer[] nextMove = new Integer[]{(int) (Math.random()*8), (int) (Math.random()*8)};
-        int limit = 10;
-
-        while(true) {
-            Pair<Integer[], Integer[][]> neighbor = getNeighbor(successorList);
-            if (getBoardScore(neighbor.getValue()) < getBoardScore(nextBoard)) {
-                return nextMove;
-            }
-            else if (getBoardScore(neighbor.getValue()) == getBoardScore(nextBoard)) {
-                limit -= 1;
-            }
-            else {
-                limit = 10;
-                nextBoard = neighbor.getValue();
-                nextMove = neighbor.getKey();
-            }
-
-            if (limit == 0) {
-                return nextMove;
-            }
-        }
+        Pair<Integer[], Integer[][]> neighbor = getNeighbor(successorList);
+        return neighbor.getKey();
     }
 
     public List<Pair<Integer[], Integer[][]>> createSuccessor(List<Integer[]> emptyBlock) {
