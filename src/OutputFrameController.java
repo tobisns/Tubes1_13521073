@@ -1,6 +1,8 @@
 import bot.Bot;
+import bot.impl.AlphaBetaBot;
 import bot.impl.DefaultBot;
 import bot.impl.LocalSearchBot;
+import bot.impl.genetic_algorithm.GeneticBot;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -72,7 +74,7 @@ public class OutputFrameController {
      * @param isBotFirst True if bot is first, false otherwise.
      *
      */
-    void getInput(String name1, String name2, String rounds, boolean isBotFirst){
+    void getInput(String name1, String name2, String rounds, String botType, boolean isBotFirst){
         this.playerXName.setText(name1);
         this.playerOName.setText(name2);
         this.roundsLeftLabel.setText(rounds);
@@ -80,18 +82,28 @@ public class OutputFrameController {
         this.isBotFirst = isBotFirst;
 
         // Start bot
-        this.bot = new LocalSearchBot();
+        switch (botType) {
+            case "Local Search":
+                this.bot = new LocalSearchBot();
+                break;
+            case "Alpha-Beta Pruning":
+                this.bot = new AlphaBetaBot();
+                break;
+            case "Genetic Algorithm":
+                this.bot = new GeneticBot();
+                break;
+            default:
+                break;
+        }
         this.playerXTurn = !isBotFirst;
         if (this.isBotFirst) {
             this.moveBot();
         }
     }
 
-
-
     /**
-     * Construct the 8x8 game board by creating a total of 64 buttons in a 2
-     * dimensional array, and construct the 8x2 score board for scorekeeping
+     * Construct the 8x8 game board by creating a total of 64 buttons in a 2-d
+     * array, and construct the 8x2 score board for score keeping
      * and then initialize turn and score.
      *
      */
