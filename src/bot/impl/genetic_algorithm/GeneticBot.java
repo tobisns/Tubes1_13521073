@@ -39,7 +39,7 @@ public class GeneticBot implements Bot {
         }
 
         Node root = null;
-        int generation = 2;
+        int generation = 35;
         for (int i = 0; i < generation; ++i) {
             root = go.formTree(population.get(0));
             for (int j = 1; j < population.size(); ++j) {
@@ -63,7 +63,7 @@ public class GeneticBot implements Bot {
 
     // do this after fitness
     public static List<String> reproduction(List<Node> leafs, int populationNumber) {
-        int chosen = (int) Math.ceil((double) leafs.size() /4);
+        int chosen = (int) Math.ceil((double) leafs.size()/3);
         List<Node> sortedLeaf = leafs.stream()
                 .sorted((n1, n2) -> Integer.compare(n2.getFitness(), n1.getFitness()))
                 .limit(chosen)
@@ -128,7 +128,6 @@ public class GeneticBot implements Bot {
             Integer[][] board_Copy = copyArr(board);
             List<Pair<Integer, Integer[]>> topStates = GeneticUtil.getTopStates(board_Copy);
             Integer[] top = topStates.get(0).getValue();
-            System.out.println("top pair: " + top[0] + " " + top[1]);
             fill(board_Copy, top);
             dfs(root.getChild(i), board_Copy);
         }
