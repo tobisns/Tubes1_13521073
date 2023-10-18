@@ -30,12 +30,12 @@ public class LocalSearchBot implements Bot {
         }
     }
 
-    public List<Integer[]> getEmptyBlock() {
+    public List<Integer[]> getEmptyBlock(Integer[][] state) {
         List<Integer[]> emptyBlock = new ArrayList<>();
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (boardState[i][j] == 0) {
+                if (state[i][j] == 0) {
                     emptyBlock.add(new Integer[]{i, j});
                 }
             }
@@ -45,7 +45,7 @@ public class LocalSearchBot implements Bot {
     }
 
     public Integer[] hillclimbing() {
-        List<Integer[]> emptyBlock = new ArrayList<>(getEmptyBlock());
+        List<Integer[]> emptyBlock = new ArrayList<>(getEmptyBlock(boardState));
         List<Pair<Integer[], Integer[][]>> successorList = new ArrayList<>(createSuccessor(emptyBlock));
         Integer[][] nextBoard = boardState;
         Integer[] nextMove = new Integer[]{(int) (Math.random()*8), (int) (Math.random()*8)};

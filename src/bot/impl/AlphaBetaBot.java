@@ -9,7 +9,7 @@ import java.util.*;
 public class AlphaBetaBot implements Bot {
     public int[] move() {
         long startTime = System.nanoTime();
-        Integer[] nextMove = minmax(true, 4, new Pair<Integer[], Integer[][]>(new Integer[]{0,0}, boardState), -10000, 10000).getKey();
+        Integer[] nextMove = minmax(true, 5, new Pair<Integer[], Integer[][]>(new Integer[]{0,0}, boardState), -10000, 10000).getKey();
         System.out.println("Next move is:" + nextMove[0] + nextMove[1]);
         long endTime = System.nanoTime();
         long elapsedTime = (endTime - startTime) / 1_000_000; // Convert nanoseconds to milliseconds
@@ -32,6 +32,10 @@ public class AlphaBetaBot implements Bot {
 //        Collections.sort(neighbors, pairComparator);
         if(depth == 0 || neighbors.size() == 0){ return state; }
         Pair<Integer[], Integer[][]> chosenState = neighbors.get(0);
+        if (Thread.currentThread().isInterrupted()) {
+            return null;
+
+        }
         if(isMax){
             for (Pair<Integer[], Integer[][]> neighbor : neighbors) {
                 Integer neighborValue = getBoardScore(minmax(false, depth - 1, neighbor, a, b).getValue());

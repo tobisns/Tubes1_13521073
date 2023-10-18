@@ -1,6 +1,8 @@
 import bot.Bot;
+import bot.impl.AlphaBetaBot;
 import bot.impl.DefaultBot;
 import bot.impl.LocalSearchBot;
+import bot.impl.genetic_algorithm.GeneticBot;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,6 +19,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.*;
 
 /**
  * The OutputFrameController class.  It controls button input from the users when
@@ -80,7 +86,7 @@ public class OutputFrameController {
         this.isBotFirst = isBotFirst;
 
         // Start bot
-        this.bot = new LocalSearchBot();
+        this.bot = new AlphaBetaBot();
         this.playerXTurn = !isBotFirst;
         if (this.isBotFirst) {
             this.moveBot();
@@ -365,9 +371,38 @@ public class OutputFrameController {
         }
         System.out.println("XXXXXXXXXXX");
 
-        int[] botMove = this.bot.move();
+        int[] botMove = null;
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        ScheduledExecutorService timeoutExecutor = Executors.newScheduledThreadPool(1);
+
+        // Submit the bot's move task to the executor
+        Future<int[]> botMoveFuture = executorService.submit(() -> {
+            // Simulate the bot's move (replace with your actual bot logic)
+            int[] moveResult = this.bot.move(); // Replace with your bot's actual move
+            return new int[]{0, 0};
+        });
+
+        try {
+            botMove = botMoveFuture.get(5, TimeUnit.SECONDS); // Get the result or timeout after 5 seconds
+            // Use the bot's move
+            System.out.println("Bot's move: " + Arrays.toString(botMove));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            // Handle the case where the bot's move took more than 5 seconds
+            List<Integer[]> emptyBlock = this.bot.getEmptyBlock(this.bot.boardState);
+            Collections.shuffle(emptyBlock);
+            Integer[] nextMove = emptyBlock.get(0);
+            botMove = new int[]{nextMove[0], nextMove[1]};
+            botMoveFuture.cancel(true);
+            executorService.shutdownNow();
+            System.out.println("Bot's move: " + Arrays.toString(botMove));
+        }
         int i = botMove[0];
         int j = botMove[1];
+        executorService.shutdownNow();
 
         if (!this.buttons[i][j].getText().equals("")) {
             new Alert(Alert.AlertType.ERROR, "Bot Invalid Coordinates. Exiting.").showAndWait();

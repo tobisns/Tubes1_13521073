@@ -3,6 +3,9 @@ package bot.impl;
 import bot.Bot;
 import javafx.scene.control.Button;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DefaultBot implements Bot {
 
     public int[] move() {
@@ -24,5 +27,19 @@ public class DefaultBot implements Bot {
                 }
             }
         }
+    }
+
+    public List<Integer[]> getEmptyBlock(Integer[][] state) {
+        List<Integer[]> emptyBlock = new ArrayList<>();
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (state[i][j] == 0) {
+                    emptyBlock.add(new Integer[]{i, j});
+                }
+            }
+        }
+
+        return emptyBlock;
     }
 }
