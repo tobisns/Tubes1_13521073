@@ -9,7 +9,7 @@ import java.util.*;
 public class AlphaBetaBot implements Bot {
     public int[] move() {
         long startTime = System.nanoTime();
-        Integer[] nextMove = minmax(true, 5, new Pair<Integer[], Integer[][]>(new Integer[]{0,0}, boardState), -10000, 10000).getKey();
+        Integer[] nextMove = minmax(true, 3, new Pair<Integer[], Integer[][]>(new Integer[]{0,0}, boardState), -10000, 10000).getKey();
         System.out.println("Next move is:" + nextMove[0] + nextMove[1]);
         long endTime = System.nanoTime();
         long elapsedTime = (endTime - startTime) / 1_000_000; // Convert nanoseconds to milliseconds

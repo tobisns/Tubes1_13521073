@@ -389,7 +389,7 @@ public class OutputFrameController {
         Future<int[]> botMoveFuture = executorService.submit(() -> {
             // Simulate the bot's move (replace with your actual bot logic)
             int[] moveResult = this.bot.move(); // Replace with your bot's actual move
-            return new int[]{0, 0};
+            return moveResult;
         });
 
         try {

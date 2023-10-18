@@ -61,6 +61,21 @@ public class GeneticBot implements Bot {
         return new int[]{res[0], res[1]};
     }
 
+    @Override
+    public List<Integer[]> getEmptyBlock(Integer[][] state) {
+        List<Integer[]> emptyBlock = new ArrayList<>();
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (state[i][j] == 0) {
+                    emptyBlock.add(new Integer[]{i, j});
+                }
+            }
+        }
+
+        return emptyBlock;
+    }
+
     // do this after fitness
     public static List<String> reproduction(List<Node> leafs, int populationNumber) {
         int chosen = (int) Math.ceil((double) leafs.size()/3);
